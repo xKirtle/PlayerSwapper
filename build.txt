@@ -1,0 +1,3 @@
+displayName = Player Swapper
+author = Kirtle
+version = 0.1

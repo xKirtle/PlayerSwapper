@@ -41,10 +41,10 @@ public class UISystem : ModSystem
     public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
     {
         //https://github.com/tModLoader/tModLoader/wiki/Vanilla-Interface-layers-values
-        int interfaceLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Interface Logic 1"));
+        int interfaceLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Cursor"));
         if (interfaceLayer != -1)
         {
-            layers.Insert(interfaceLayer, new LegacyGameInterfaceLayer("Player Swapper: Logic 1",
+            layers.Insert(interfaceLayer, new LegacyGameInterfaceLayer("Player Swapper: Cursor",
                 delegate
                 {
                     if (lastUpdateUiGameTime != null && userInterface?.CurrentState != null)

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using PlayerSwapper.Content.UI;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ModLoader;
@@ -44,6 +45,10 @@ public class PSPlayer : ModPlayer
         }
 
         if (PlayerSwapper.toggleGUI.JustPressed)
+        {
             userInterface.SetState(userInterface.CurrentState == uiState ? null : uiState);
+            if (userInterface.CurrentState == uiState)
+                PSUIState.Instance.gui.RefreshGUI();
+        }
     }
 }

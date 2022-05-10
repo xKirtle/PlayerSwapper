@@ -8,6 +8,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.IO;
 using Terraria.Localization;
+using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.Social;
 using Terraria.UI;
@@ -20,6 +21,7 @@ public class UICharacterListItemModified : UIPanel
     private PlayerFileData _data;
     private Asset<Texture2D> _dividerTexture;
     private Asset<Texture2D> _innerPanelTexture;
+    private Asset<Texture2D> _innerPanelTexture2;
     private UICharacter _playerPanel;
     private UIText _buttonLabel;
     private Asset<Texture2D> _buttonCloudActiveTexture;
@@ -36,8 +38,10 @@ public class UICharacterListItemModified : UIPanel
     public UICharacterListItemModified(PlayerFileData data, int snapPointIndex)
     {
         BorderColor = new Color(89, 116, 213) * 0.7f;
-        _dividerTexture = Main.Assets.Request<Texture2D>("Images/UI/Divider");
-        _innerPanelTexture = Main.Assets.Request<Texture2D>("Images/UI/InnerPanelBackground");
+        // _dividerTexture = Main.Assets.Request<Texture2D>("Images/UI/Divider");
+        _dividerTexture = ModContent.Request<Texture2D>("PlayerSwapper/Assets/UI/Divider");
+        _innerPanelTexture = ModContent.Request<Texture2D>("PlayerSwapper/Assets/UI/InnerPanelBackground");
+        _innerPanelTexture2 = ModContent.Request<Texture2D>("PlayerSwapper/Assets/UI/InnerPanelBackground2");
         _buttonCloudActiveTexture = Main.Assets.Request<Texture2D>("Images/UI/ButtonCloudActive");
         _buttonCloudInactiveTexture = Main.Assets.Request<Texture2D>("Images/UI/ButtonCloudInactive");
         _buttonFavoriteActiveTexture = Main.Assets.Request<Texture2D>("Images/UI/ButtonFavoriteActive");
@@ -89,13 +93,11 @@ public class UICharacterListItemModified : UIPanel
         _buttonLabel.Left.Set(84f, 0f);
         _buttonLabel.Top.Set(-3f, 0f);
         Append(_buttonLabel);
-        
-        UIPanel textBackground = new UIPanel();
-        textBackground.BackgroundColor = new Color(43, 56, 101);
-        textBackground.BorderColor = Color.Transparent;
-        textBackground.VAlign = .5f;
-        textBackground.Width.Set(140f, 0f);
-        textBackground.Left.Set(75f, 0f);
+
+        UIImage textBackground = new UIImage(_innerPanelTexture);
+        textBackground.Left.Set(74f, 0f);
+        textBackground.Top.Set(35f, 0f);
+        textBackground.SetPadding(0f);
         Append(textBackground);
         
         string text = "";
@@ -120,11 +122,34 @@ public class UICharacterListItemModified : UIPanel
 
         UIText uiText = new UIText(text);
         uiText.TextColor = color;
-        uiText.VAlign = textBackground.VAlign;
-        uiText.Left.Set(
-	        textBackground.Left.Pixels + textBackground.Width.Pixels / 2 -
-	        FontAssets.MouseText.Value.MeasureString(text).X * 0.5f, 0f);
-		Append(uiText);
+        uiText.Left.Set(70f - FontAssets.MouseText.Value.MeasureString(text).X * 0.5f, 0f);
+        uiText.Top.Set(5f, 0f);
+        textBackground.Append(uiText);
+
+        UIImage playTimeBackground = new UIImage(_innerPanelTexture2);
+		playTimeBackground.Left.Set(219f, 0f);
+		playTimeBackground.Top.Set(35f, 0f);
+		playTimeBackground.SetPadding(0f);
+		Append(playTimeBackground);
+		
+		TimeSpan playTime = _data.GetPlayTime();
+		int num2 = playTime.Days * 24 + playTime.Hours;
+		string text2 = ((num2 < 10) ? "0" : "") + num2 + playTime.ToString("\\:mm\\:ss");
+		
+		UIText uiText2 = new UIText(text2);
+		uiText2.Left.Set(55f - FontAssets.MouseText.Value.MeasureString(text2).X * 0.5f, 0f);
+		uiText2.Top.Set(5f, 0f);
+		playTimeBackground.Append(uiText2);
+
+		UIImage divider = new UIImage(_dividerTexture);
+		divider.Left.Set(_playerPanel.Left.Pixels + _playerPanel.Width.Pixels, 0f);
+		divider.Top.Set(25f, 0f);
+		Append(divider);
+
+		UIText name = new UIText(_data.Name);
+		name.Left.Set(75f, 0f);
+		name.Top.Set(7f, 0f);
+		Append(name);
     }
     
     private void PlayGame(UIMouseEvent evt, UIElement listeningElement) 
@@ -182,52 +207,5 @@ public class UICharacterListItemModified : UIPanel
         BackgroundColor = new Color(63, 82, 151) * 0.7f;
         BorderColor = new Color(89, 116, 213) * 0.7f;
         _playerPanel.SetAnimated(animated: false);
-    }
-    
-    private void DrawPanel(SpriteBatch spriteBatch, Vector2 position, float width) 
-    {
-        spriteBatch.Draw(_innerPanelTexture.Value, position, new Rectangle(0, 0, 8, _innerPanelTexture.Height()), Color.White);
-        spriteBatch.Draw(_innerPanelTexture.Value, new Vector2(position.X + 8f, position.Y), new Rectangle(8, 0, 8, _innerPanelTexture.Height()), Color.White, 0f, Vector2.Zero, new Vector2((width - 16f) / 8f, 1f), SpriteEffects.None, 0f);
-        spriteBatch.Draw(_innerPanelTexture.Value, new Vector2(position.X + width - 8f, position.Y), new Rectangle(16, 0, 8, _innerPanelTexture.Height()), Color.White);
-    }
-    
-    protected override void DrawSelf(SpriteBatch spriteBatch) 
-    {
-		base.DrawSelf(spriteBatch);
-		CalculatedStyle innerDimensions = GetInnerDimensions();
-		CalculatedStyle dimensions = _playerPanel.GetDimensions();
-		float num = dimensions.X + dimensions.Width;
-		Color color = Color.White;
-		string text = _data.Name;
-		if (_data.Player.loadStatus != 0) {
-			color = Color.Gray;
-			string name = StatusID.Search.GetName(_data.Player.loadStatus);
-			text = "(" + name + ") " + text;
-		}
-
-		//Name placement
-		Utils.DrawBorderString(spriteBatch, text, new Vector2(num + 6f, dimensions.Y - 3f), color);
-		//Line under name placement
-		spriteBatch.Draw(_dividerTexture.Value, new Vector2(num, innerDimensions.Y + 26f), null, Color.White, 0f, Vector2.Zero, new Vector2((GetDimensions().X + GetDimensions().Width - num) / 8f, 1f), SpriteEffects.None, 0f);
-		
-
-		// Vector2 vector = new Vector2(num + 6f, innerDimensions.Y + 38f);
-		// DrawPanel(spriteBatch, vector, 140f);
-
-		// Vector2 vector2 = new Vector2(FontAssets.MouseText.Value.MeasureString(text2).X * 0.5f + 140f, 3f);
-		// Main.NewText($"{(num + 6f + 140f * 0.5f)} / {FontAssets.MouseText.Value.MeasureString(text2).X * 0.5f}");
-		// Utils.DrawBorderString(spriteBatch, text2, vector2, color2);
-
-		// vector3 += new Vector2(num3 * 0.5f - FontAssets.MouseText.Value.MeasureString(text2).X * 0.5f, 3f);
-		// Utils.DrawBorderString(spriteBatch, text2, vector3, color2);
-		// vector.X += num3 + 5f;
-		// Vector2 vector4 = vector;
-		// float num4 = innerDimensions.X + innerDimensions.Width - vector4.X;
-		// DrawPanel(spriteBatch, vector4, num4);
-		// TimeSpan playTime = _data.GetPlayTime();
-		// int num5 = playTime.Days * 24 + playTime.Hours;
-		// string text3 = ((num5 < 10) ? "0" : "") + num5 + playTime.ToString("\\:mm\\:ss");
-		// vector4 += new Vector2(num4 * 0.5f - FontAssets.MouseText.Value.MeasureString(text3).X * 0.5f, 3f);
-		// Utils.DrawBorderString(spriteBatch, text3, vector4, Color.White);
     }
 }

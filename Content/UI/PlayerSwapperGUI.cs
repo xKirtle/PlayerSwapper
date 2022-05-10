@@ -20,9 +20,10 @@ public class PlayerSwapperGUI : UIPanel
         BorderColor = Color.Transparent;
         BackgroundColor = Color.RoyalBlue;
 
+        //TODO: Add logic to hide scrollbar if not necessary
         UIScrollbar scrollbar = new UIScrollbar();
-        scrollbar.HAlign = 0.999f;
-        scrollbar.Top.Set(9f, 0f);
+        scrollbar.HAlign = 0.995f;
+        scrollbar.Top.Set(10f, 0f);
         scrollbar.Height.Set(Height.Pixels - 20f, 0f);
         Append(scrollbar);
 
@@ -52,6 +53,8 @@ public class PlayerSwapperGUI : UIPanel
 
             top += 100f;
         }
+        
+        _uiGrid.UpdateOrder();
     }
 
     public override void Update(GameTime gameTime)

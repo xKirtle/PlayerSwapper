@@ -154,11 +154,24 @@ public class UICharacterListItemModified : UIPanel
     
     private void PlayGame(UIMouseEvent evt, UIElement listeningElement) 
     {
-        //TODO: Swap character
+	    Vector2 oldPos = Main.LocalPlayer.position;
+	    int oldDir = Main.LocalPlayer.direction;
+	    
+	    //Saves player to file without unloading world
+	    Main.ActivePlayerFileData.StopPlayTimer();
+	    Player.SavePlayer(Main.ActivePlayerFileData);
+	    Player.ClearPlayerTempInfo();
         
-        //Vanilla
-        // if (listeningElement == evt.Target && _data.Player.loadStatus == 0)
-        //     Main.SelectPlayer(_data);
+	    //Load new desired player
+	    Main.PlayerList[Main.PlayerList.IndexOf(_data)].SetAsActive();
+	    Main.player[Main.myPlayer].Spawn(PlayerSpawnContext.SpawningIntoWorld);
+	    Main.ActivePlayerFileData.StartPlayTimer();
+	    Player.Hooks.EnterWorld(Main.myPlayer);
+	    
+	    Main.LocalPlayer.position = oldPos;
+	    Main.LocalPlayer.direction = oldDir;
+	    
+	    PSUIState.Instance.gui.RefreshGUI();
     }
     
     private void PlayMouseOver(UIMouseEvent evt, UIElement listeningElement) {

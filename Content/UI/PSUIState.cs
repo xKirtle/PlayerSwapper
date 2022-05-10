@@ -1,3 +1,4 @@
+using Terraria;
 using Microsoft.Xna.Framework;
 using Terraria.UI;
 
@@ -21,6 +22,6 @@ public class PSUIState : UIState
 
     public override void Update(GameTime gameTime)
     {
-        // gui.Update(gameTime);
+        gui.Update(gameTime);
     }
 }

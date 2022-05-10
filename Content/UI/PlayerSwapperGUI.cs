@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.GameInput;
 using Terraria.ModLoader.UI.Elements;
 
 namespace PlayerSwapper.Content.UI;
@@ -14,8 +16,8 @@ public class PlayerSwapperGUI : UIPanel
     {
         Width.Set(width, 0f);
         Height.Set(height, 0f);
-        Left.Set(Main.screenWidth - width * 1.5f, 0f);
-        Top.Set(Main.screenHeight / 2 - height / 2, 0f);
+        Left.Set(Main.screenWidth / 2 - width / 2, 0f);
+        Top.Set(20f, 0f);
         SetPadding(0f);
         BorderColor = Color.Transparent;
         BackgroundColor = Color.RoyalBlue;
@@ -59,7 +61,14 @@ public class PlayerSwapperGUI : UIPanel
 
     public override void Update(GameTime gameTime)
     {
-        
+        Left.Set(Main.screenWidth / 2 - width / 2, 0f);
+        Top.Set(20f, 0f);
+
+        if (IsMouseHovering)
+        {
+            Main.LocalPlayer.mouseInterface = true;
+            PlayerInput.LockVanillaMouseScroll("ModLoader/UIGrid");
+        }
     }
 
     public void RefreshGUI()

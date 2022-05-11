@@ -1,1 +1,1 @@
-Player Swapper is a pretty cool mod, it does...this. Modify this file with a description of your mod.
+Player Swapper allows you to swap between player saves without the need of rejoining your world!

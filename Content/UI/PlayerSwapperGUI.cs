@@ -1,17 +1,21 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PlayerSwapper.Common.Systems;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.GameInput;
+using Terraria.ModLoader;
 using Terraria.ModLoader.UI.Elements;
 
 namespace PlayerSwapper.Content.UI;
 
 public class PlayerSwapperGUI : UIPanel
 {
+    public bool IsGUIOpen { get; private set; } = false;
     private const float width = 360f, height = 306f;
     private UIGrid _uiGrid;
+    private UIScrollbar _scrollbar;
     public PlayerSwapperGUI() : base()
     {
         Width.Set(width, 0f);
@@ -20,27 +24,27 @@ public class PlayerSwapperGUI : UIPanel
         Top.Set(20f, 0f);
         SetPadding(0f);
         BorderColor = Color.Transparent;
-        BackgroundColor = Color.RoyalBlue;
-
-        //TODO: Add logic to hide scrollbar if not necessary
-        UIScrollbar scrollbar = new UIScrollbar();
-        scrollbar.HAlign = 0.995f;
-        scrollbar.Top.Set(10f, 0f);
-        scrollbar.Height.Set(Height.Pixels - 20f, 0f);
-        Append(scrollbar);
+        BackgroundColor = Color.Transparent;
+        
+        _scrollbar = new UIScrollbar();
+        _scrollbar.HAlign = 0.995f;
+        _scrollbar.Top.Set(10f, 0f);
+        _scrollbar.Height.Set(Height.Pixels - 20f, 0f);
+        Append(_scrollbar);
 
         _uiGrid = new UIGrid();
         _uiGrid.ListPadding = 1f;
         _uiGrid.Width.Set(width - 20f, 0f);
         _uiGrid.Height.Set(Height.Pixels, 0f);
         _uiGrid.SetPadding(2f);
-        _uiGrid.SetScrollbar(scrollbar);
+        _uiGrid.SetScrollbar(_scrollbar);
         Append(_uiGrid);
     }
 
     private void GenerateUICharacters()
     {
         _uiGrid.Clear();
+        RemoveChild(_scrollbar);
 
         float top = 0f;
         for (int i = 0; i < Main.PlayerList.Count; i++)
@@ -55,6 +59,9 @@ public class PlayerSwapperGUI : UIPanel
 
             top += 100f;
         }
+        
+        if (_uiGrid._items.Count > 3)
+            Append(_scrollbar);
         
         _uiGrid.UpdateOrder();
     }
@@ -71,8 +78,15 @@ public class PlayerSwapperGUI : UIPanel
         }
     }
 
-    public void RefreshGUI()
+    public void ToggleGUI()
     {
-        GenerateUICharacters();
+        UISystem uiSystem = ModContent.GetInstance<UISystem>();
+        uiSystem.userInterface.SetState(uiSystem.userInterface.CurrentState == uiSystem.uiState ? null : uiSystem.uiState);
+        IsGUIOpen = uiSystem.userInterface.CurrentState == uiSystem.uiState;
+        
+        if (IsGUIOpen)
+            RefreshGUI();
     }
+
+    public void RefreshGUI() => GenerateUICharacters();
 }

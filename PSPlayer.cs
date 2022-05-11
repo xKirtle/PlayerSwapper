@@ -14,10 +14,20 @@ public class PSPlayer : ModPlayer
     public override void ProcessTriggers(TriggersSet triggersSet)
     {
         if (PlayerSwapper.toggleGUI.JustPressed)
+            PSUIState.Instance.gui.ToggleGUI();
+
+        if (PlayerSwapper.nextPlayer.JustPressed)
         {
-            userInterface.SetState(userInterface.CurrentState == uiState ? null : uiState);
-            if (userInterface.CurrentState == uiState)
-                PSUIState.Instance.gui.RefreshGUI();
+            int curPlayerIndex = Main.PlayerList.IndexOf(Main.PlayerList.First(x => x.Player == Main.LocalPlayer));
+            if (curPlayerIndex + 1 < Main.PlayerList.Count)
+                ModContent.GetInstance<PlayerSwapper>().SwapPlayer(Main.PlayerList[curPlayerIndex + 1]);
+        }
+        
+        if (PlayerSwapper.previousPlayer.JustPressed)
+        {
+            int curPlayerIndex = Main.PlayerList.IndexOf(Main.PlayerList.First(x => x.Player == Main.LocalPlayer));
+            if (curPlayerIndex - 1 >= 0)
+                ModContent.GetInstance<PlayerSwapper>().SwapPlayer(Main.PlayerList[curPlayerIndex - 1]);
         }
     }
 }

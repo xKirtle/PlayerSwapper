@@ -29,8 +29,6 @@ public class UICharacterListItemModified : UIPanel
     private Asset<Texture2D> _buttonFavoriteActiveTexture;
     private Asset<Texture2D> _buttonFavoriteInactiveTexture;
     private Asset<Texture2D> _buttonPlayTexture;
-    private Asset<Texture2D> _errorTexture;
-    private Asset<Texture2D> _configTexture;
     private ulong _fileSize;
     
     public bool IsFavorite => _data.IsFavorite;
@@ -38,7 +36,6 @@ public class UICharacterListItemModified : UIPanel
     public UICharacterListItemModified(PlayerFileData data, int snapPointIndex)
     {
         BorderColor = new Color(89, 116, 213) * 0.7f;
-        // _dividerTexture = Main.Assets.Request<Texture2D>("Images/UI/Divider");
         _dividerTexture = ModContent.Request<Texture2D>("PlayerSwapper/Assets/UI/Divider");
         _innerPanelTexture = ModContent.Request<Texture2D>("PlayerSwapper/Assets/UI/InnerPanelBackground");
         _innerPanelTexture2 = ModContent.Request<Texture2D>("PlayerSwapper/Assets/UI/InnerPanelBackground2");
@@ -51,36 +48,36 @@ public class UICharacterListItemModified : UIPanel
         Height.Set(100f, 0f);
         Width.Set(0f, 1f);
         SetPadding(6f);
-        
+
         _data = data;
         
         _playerPanel = new UICharacter(data.Player);
         _playerPanel.Left.Set(12f, 0f);
         _playerPanel.VAlign = 0.2f;
-        _playerPanel.OnDoubleClick += PlayGame;
-        base.OnDoubleClick += PlayGame;
+        _playerPanel.OnDoubleClick += (__, _) => { ModContent.GetInstance<PlayerSwapper>().SwapPlayer(data); };
+        base.OnDoubleClick += (__, _) => { ModContent.GetInstance<PlayerSwapper>().SwapPlayer(data); };
         Append(_playerPanel);
         
         UIImageButton buttonPlay = new UIImageButton(_buttonPlayTexture);
         buttonPlay.VAlign = .91f;
         buttonPlay.Left.Set(8f, 0f);
-        buttonPlay.OnClick += PlayGame;
+        buttonPlay.OnClick += (__, _) => { ModContent.GetInstance<PlayerSwapper>().SwapPlayer(data); };
         buttonPlay.OnMouseOver += PlayMouseOver;
         buttonPlay.OnMouseOut += ButtonMouseOut;
         buttonPlay.SetSnapPoint("Play", snapPointIndex);
         Append(buttonPlay);
         
-        UIImageButton buttonFavorite = new UIImageButton(_data.IsFavorite ? _buttonFavoriteActiveTexture : _buttonFavoriteInactiveTexture);
+        UIImageButton buttonFavorite = new UIImageButton(data.IsFavorite ? _buttonFavoriteActiveTexture : _buttonFavoriteInactiveTexture);
         buttonFavorite.VAlign = .91f;
         buttonFavorite.Left.Set(32f, 0f);
         buttonFavorite.OnMouseOver += FavoriteMouseOver;
         buttonFavorite.OnMouseOut += ButtonMouseOut;
-        buttonFavorite.SetVisibility(1f, _data.IsFavorite ? 0.8f : 0.4f);
+        buttonFavorite.SetVisibility(1f, data.IsFavorite ? 0.8f : 0.4f);
         buttonFavorite.SetSnapPoint("Favorite", snapPointIndex);
         Append(buttonFavorite);
         
         if (SocialAPI.Cloud != null) {
-            UIImageButton buttonCloud = new UIImageButton(_data.IsCloudSave ? _buttonCloudActiveTexture : _buttonCloudInactiveTexture);
+            UIImageButton buttonCloud = new UIImageButton(data.IsCloudSave ? _buttonCloudActiveTexture : _buttonCloudInactiveTexture);
             buttonCloud.VAlign = .91f;
             buttonCloud.Left.Set(56f, 0f);
             buttonCloud.OnMouseOut += ButtonMouseOut;
@@ -102,7 +99,7 @@ public class UICharacterListItemModified : UIPanel
         
         string text = "";
         Color color = Color.White;
-        switch (_data.Player.difficulty) {
+        switch (data.Player.difficulty) {
 	        case 0:
 		        text = Language.GetTextValue("UI.Softcore");
 		        break;
@@ -132,7 +129,7 @@ public class UICharacterListItemModified : UIPanel
 		playTimeBackground.SetPadding(0f);
 		Append(playTimeBackground);
 		
-		TimeSpan playTime = _data.GetPlayTime();
+		TimeSpan playTime = data.GetPlayTime();
 		int num2 = playTime.Days * 24 + playTime.Hours;
 		string text2 = ((num2 < 10) ? "0" : "") + num2 + playTime.ToString("\\:mm\\:ss");
 		
@@ -146,47 +143,25 @@ public class UICharacterListItemModified : UIPanel
 		divider.Top.Set(25f, 0f);
 		Append(divider);
 
-		UIText name = new UIText(_data.Name);
+		UIText name = new UIText(data.Name);
 		name.Left.Set(75f, 0f);
 		name.Top.Set(7f, 0f);
 		Append(name);
     }
-    
-    private void PlayGame(UIMouseEvent evt, UIElement listeningElement) 
+
+    private void PlayMouseOver(UIMouseEvent evt, UIElement listeningElement) 
     {
-	    Vector2 oldPos = Main.LocalPlayer.position;
-	    int oldDir = Main.LocalPlayer.direction;
-	    
-	    //Saves player to file without unloading world
-	    Main.ActivePlayerFileData.StopPlayTimer();
-	    Player.SavePlayer(Main.ActivePlayerFileData);
-	    Player.ClearPlayerTempInfo();
-        
-	    //Load new desired player
-	    Main.PlayerList[Main.PlayerList.IndexOf(_data)].SetAsActive();
-	    Main.player[Main.myPlayer].Spawn(PlayerSpawnContext.SpawningIntoWorld);
-	    Main.ActivePlayerFileData.StartPlayTimer();
-	    Player.Hooks.EnterWorld(Main.myPlayer);
-	    
-	    Main.LocalPlayer.position = oldPos;
-	    Main.LocalPlayer.direction = oldDir;
-	    
-	    PSUIState.Instance.gui.RefreshGUI();
-    }
-    
-    private void PlayMouseOver(UIMouseEvent evt, UIElement listeningElement) {
         _buttonLabel.SetText(Language.GetTextValue("UI.Play"));
     }
     
-    private void ButtonMouseOut(UIMouseEvent evt, UIElement listeningElement) {
+    private void ButtonMouseOut(UIMouseEvent evt, UIElement listeningElement) 
+    {
         _buttonLabel.SetText("");
     }
     
-    private void FavoriteMouseOver(UIMouseEvent evt, UIElement listeningElement) {
-        if (_data.IsFavorite)
-            _buttonLabel.SetText(Language.GetTextValue("UI.Unfavorite"));
-        else
-            _buttonLabel.SetText(Language.GetTextValue("UI.Favorite"));
+    private void FavoriteMouseOver(UIMouseEvent evt, UIElement listeningElement) 
+    { 
+	    _buttonLabel.SetText(Language.GetTextValue("UI." + (_data.IsFavorite ? "Unfavorite" : "Favorite")));
     }
     
     public override int CompareTo(object obj) 
@@ -210,15 +185,15 @@ public class UICharacterListItemModified : UIPanel
     
     public override void MouseOver(UIMouseEvent evt) {
         base.MouseOver(evt);
-        BackgroundColor = new Color(73, 94, 171);
-        BorderColor = new Color(89, 116, 213);
-        _playerPanel.SetAnimated(animated: true);
+        BackgroundColor = new Color(73, 94, 171) * 0.75f;
+        BorderColor = new Color(89, 116, 213) * 0.75f;
+        _playerPanel.SetAnimated(true);
     }
 
     public override void MouseOut(UIMouseEvent evt) {
         base.MouseOut(evt);
         BackgroundColor = new Color(63, 82, 151) * 0.7f;
         BorderColor = new Color(89, 116, 213) * 0.7f;
-        _playerPanel.SetAnimated(animated: false);
+        _playerPanel.SetAnimated(false);
     }
 }

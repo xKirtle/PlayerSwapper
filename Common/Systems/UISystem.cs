@@ -10,9 +10,9 @@ namespace PlayerSwapper.Common.Systems;
 
 public class UISystem : ModSystem
 {
-    private GameTime lastUpdateUiGameTime;
-    internal static UserInterface userInterface;
-    internal static PSUIState uiState;
+    private GameTime _lastUpdateUiGameTime;
+    internal UserInterface userInterface;
+    internal PSUIState uiState;
 
     public override void Load()
     {
@@ -20,7 +20,6 @@ public class UISystem : ModSystem
         {
             uiState = new PSUIState();
             userInterface = new UserInterface();
-            // userInterface.SetState(uiState);
         }
     }
 
@@ -28,16 +27,16 @@ public class UISystem : ModSystem
     {
         uiState.Unload();
         uiState = null;
+        userInterface = null;
     }
 
     public override void UpdateUI(GameTime gameTime)
     {
-        lastUpdateUiGameTime = gameTime;
+        _lastUpdateUiGameTime = gameTime;
         if (userInterface?.CurrentState != null)
             userInterface.Update(gameTime);
     }
     
-    //TODO: Check which layer it should insert on
     public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
     {
         //https://github.com/tModLoader/tModLoader/wiki/Vanilla-Interface-layers-values
@@ -47,8 +46,8 @@ public class UISystem : ModSystem
             layers.Insert(interfaceLayer, new LegacyGameInterfaceLayer("Player Swapper: Cursor",
                 delegate
                 {
-                    if (lastUpdateUiGameTime != null && userInterface?.CurrentState != null)
-                        userInterface.Draw(Main.spriteBatch, lastUpdateUiGameTime);
+                    if (_lastUpdateUiGameTime != null && userInterface?.CurrentState != null)
+                        userInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
 
                     return true;
                 },

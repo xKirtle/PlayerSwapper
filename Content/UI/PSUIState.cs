@@ -8,7 +8,8 @@ public class PSUIState : UIState
 {
     public static PSUIState Instance;
     public PlayerSwapperGUI gui;
-    public override void OnInitialize()
+
+    public PSUIState() : base()
     {
         Instance = this;
         gui = new PlayerSwapperGUI();

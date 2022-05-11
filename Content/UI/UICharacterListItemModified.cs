@@ -10,6 +10,7 @@ using Terraria.IO;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
+using Terraria.ModLoader.UI.Elements;
 using Terraria.Social;
 using Terraria.UI;
 using Terraria.Utilities;
@@ -70,17 +71,20 @@ public class UICharacterListItemModified : UIPanel
         UIImageButton buttonFavorite = new UIImageButton(data.IsFavorite ? _buttonFavoriteActiveTexture : _buttonFavoriteInactiveTexture);
         buttonFavorite.VAlign = .91f;
         buttonFavorite.Left.Set(32f, 0f);
+        buttonFavorite.OnClick += FavoriteButtonClick;
         buttonFavorite.OnMouseOver += FavoriteMouseOver;
         buttonFavorite.OnMouseOut += ButtonMouseOut;
         buttonFavorite.SetVisibility(1f, data.IsFavorite ? 0.8f : 0.4f);
         buttonFavorite.SetSnapPoint("Favorite", snapPointIndex);
         Append(buttonFavorite);
         
-        if (SocialAPI.Cloud != null) {
+        if (SocialAPI.Cloud != null) 
+        {
             UIImageButton buttonCloud = new UIImageButton(data.IsCloudSave ? _buttonCloudActiveTexture : _buttonCloudInactiveTexture);
             buttonCloud.VAlign = .91f;
             buttonCloud.Left.Set(56f, 0f);
             buttonCloud.OnMouseOut += ButtonMouseOut;
+            buttonCloud.SetVisibility(0.4f, 0.4f);
             Append(buttonCloud);
             buttonCloud.SetSnapPoint("Cloud", snapPointIndex);
         }
@@ -99,7 +103,8 @@ public class UICharacterListItemModified : UIPanel
         
         string text = "";
         Color color = Color.White;
-        switch (data.Player.difficulty) {
+        switch (data.Player.difficulty) 
+        {
 	        case 0:
 		        text = Language.GetTextValue("UI.Softcore");
 		        break;
@@ -159,15 +164,27 @@ public class UICharacterListItemModified : UIPanel
         _buttonLabel.SetText("");
     }
     
+    private void FavoriteButtonClick(UIMouseEvent evt, UIElement listeningElement) 
+    {
+	    _data.ToggleFavorite();
+	    UIImageButton buttonFavorite = (UIImageButton) evt.Target;
+	    buttonFavorite.SetImage(_data.IsFavorite ? _buttonFavoriteActiveTexture : _buttonFavoriteInactiveTexture);
+	    buttonFavorite.SetVisibility(1f, _data.IsFavorite ? 0.8f : 0.4f);
+	    
+	    _buttonLabel.SetText(Language.GetTextValue("UI." + (_data.IsFavorite ? "Unfavorite" : "Favorite")));
+	    (base.Parent.Parent as UIGrid)?.UpdateOrder();
+    }
+    
     private void FavoriteMouseOver(UIMouseEvent evt, UIElement listeningElement) 
     { 
 	    _buttonLabel.SetText(Language.GetTextValue("UI." + (_data.IsFavorite ? "Unfavorite" : "Favorite")));
     }
-    
+
     public override int CompareTo(object obj) 
     {
 	    UICharacterListItemModified uICharacterListItem = obj as UICharacterListItemModified;
-	    if (uICharacterListItem != null) {
+	    if (uICharacterListItem != null) 
+	    {
 		    if (IsFavorite && !uICharacterListItem.IsFavorite)
 			    return -1;
 
@@ -183,14 +200,16 @@ public class UICharacterListItemModified : UIPanel
 	    return base.CompareTo(obj);
     }
     
-    public override void MouseOver(UIMouseEvent evt) {
+    public override void MouseOver(UIMouseEvent evt) 
+    {
         base.MouseOver(evt);
         BackgroundColor = new Color(73, 94, 171) * 0.75f;
         BorderColor = new Color(89, 116, 213) * 0.75f;
         _playerPanel.SetAnimated(true);
     }
 
-    public override void MouseOut(UIMouseEvent evt) {
+    public override void MouseOut(UIMouseEvent evt) 
+    {
         base.MouseOut(evt);
         BackgroundColor = new Color(63, 82, 151) * 0.7f;
         BorderColor = new Color(89, 116, 213) * 0.7f;

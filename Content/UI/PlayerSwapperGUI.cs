@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PlayerSwapper.Common.Configs;
 using PlayerSwapper.Common.Systems;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.GameInput;
+using Terraria.ID;
+using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI.Elements;
 
@@ -49,7 +52,10 @@ public class PlayerSwapperGUI : UIPanel
         float top = 0f;
         for (int i = 0; i < Main.PlayerList.Count; i++)
         {
-            if (Main.PlayerList[i] == Main.ActivePlayerFileData) continue;
+            PlayerFileData data = Main.PlayerList[i];
+            if (data == Main.ActivePlayerFileData) continue;
+            if (!ModContent.GetInstance<PSModConfig>().CanSwapRegardlessOfDifficulty &&
+                !PSPlayer.PlayerMatchesWorldDifficulty(data.Player)) continue;
 
             UICharacterListItemModified listItem = new UICharacterListItemModified(Main.PlayerList[i], i);
             listItem.Width.Set(width-20f, 0f);

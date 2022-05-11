@@ -21,8 +21,6 @@ namespace PlayerSwapper
 
 		public void SwapPlayer(PlayerFileData data)
 		{
-			//TODO: Add ModConfig to prevent Journey characters from joining Non-Journey worlds and vice-versa
-			
 			Vector2 oldPos = Main.LocalPlayer.position;
 			int oldDir = Main.LocalPlayer.direction;
 

@@ -33,7 +33,7 @@ namespace PlayerSwapper
 			Player.SavePlayer(Main.ActivePlayerFileData);
 			Player.ClearPlayerTempInfo();
 
-			//BUG: In multiplayer, the player base skin will be the same as the one the player joined with for all playerSaves
+			//BUG: In multiplayer, the player base skin will be the same as the one the player first joined with for all playerSaves
 
 			//Load new desired player
 			Main.PlayerList[Main.PlayerList.IndexOf(data)].SetAsActive();

@@ -55,14 +55,14 @@ public class UICharacterListItemModified : UIPanel
         _playerPanel = new UICharacter(data.Player);
         _playerPanel.Left.Set(12f, 0f);
         _playerPanel.VAlign = 0.2f;
-        _playerPanel.OnDoubleClick += (__, _) => { ModContent.GetInstance<PlayerSwapper>().SwapPlayer(data); };
-        base.OnDoubleClick += (__, _) => { ModContent.GetInstance<PlayerSwapper>().SwapPlayer(data); };
+        _playerPanel.OnDoubleClick += (__, _) => { PSPlayer.SwapPlayer(data); };
+        base.OnDoubleClick += (__, _) => { PSPlayer.SwapPlayer(data); };
         Append(_playerPanel);
         
         UIImageButton buttonPlay = new UIImageButton(_buttonPlayTexture);
         buttonPlay.VAlign = .91f;
         buttonPlay.Left.Set(8f, 0f);
-        buttonPlay.OnClick += (__, _) => { ModContent.GetInstance<PlayerSwapper>().SwapPlayer(data); };
+        buttonPlay.OnClick += (__, _) => { PSPlayer.SwapPlayer(data); };
         buttonPlay.OnMouseOver += PlayMouseOver;
         buttonPlay.OnMouseOut += ButtonMouseOut;
         buttonPlay.SetSnapPoint("Play", snapPointIndex);

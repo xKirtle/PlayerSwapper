@@ -18,6 +18,7 @@ public class PSUIState : UIState
 
     public void Unload()
     {
+        Instance = null;
         gui = null;
     }
 

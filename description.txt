@@ -1,1 +1,7 @@
-Player Swapper allows you to swap between player saves without the need of rejoining your world!
+Player Swap allows you to swap between player saves without the need of rejoining your world!
+
+Swapping can be done through the menu that can be brought up with a keybind or through two different keybinds to iterate over all available player saves.
+
+You can also control whether you want to allow yourself to swap to Journey mode characters on non Journey mode worlds and vice versa! (Multiplayer usage might have some visual bugs as this is not an intended use)
+
+See the mod in use here: https://i.imgur.com/uKPo4OI.mp4

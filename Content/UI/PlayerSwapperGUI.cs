@@ -63,6 +63,8 @@ public class PlayerSwapperGUI : DraggableUIPanel
 
     private void GenerateUICharacters()
     {
+        PSPlayer.journeyCharactersIndex = new List<int>();
+        PSPlayer.classicCharactersIndex = new List<int>();
         _uiGrid.Clear();
 
         float top = 0f;
@@ -73,6 +75,11 @@ public class PlayerSwapperGUI : DraggableUIPanel
             if (!ModContent.GetInstance<PSModConfig>().CanSwapRegardlessOfDifficulty &&
                 !PSPlayer.PlayerMatchesWorldDifficulty(data.Player)) continue;
 
+            if (Main.GameMode == GameModeID.Creative)
+                PSPlayer.journeyCharactersIndex.Add(i);
+            else
+                PSPlayer.classicCharactersIndex.Add(i);
+            
             UICharacterListItemModified listItem = new UICharacterListItemModified(Main.PlayerList[i], i);
             listItem.Width.Set(width-20f, 0f);
             listItem.Top.Set(top,0f);

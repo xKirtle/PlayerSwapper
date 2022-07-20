@@ -31,6 +31,7 @@ public class UICharacterListItemModified : UIPanel
     private Asset<Texture2D> _buttonFavoriteInactiveTexture;
     private Asset<Texture2D> _buttonPlayTexture;
     private ulong _fileSize;
+    public Player player;
     
     public bool IsFavorite => _data.IsFavorite;
 
@@ -51,8 +52,9 @@ public class UICharacterListItemModified : UIPanel
         SetPadding(6f);
 
         _data = data;
+        player = data.Player;
         
-        _playerPanel = new UICharacter(data.Player);
+        _playerPanel = new UICharacter(player);
         _playerPanel.Left.Set(12f, 0f);
         _playerPanel.VAlign = 0.2f;
         _playerPanel.OnDoubleClick += (__, _) => { PSPlayer.SwapPlayer(data); };

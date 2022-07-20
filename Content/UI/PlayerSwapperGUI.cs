@@ -19,6 +19,7 @@ public class PlayerSwapperGUI : DraggableUIPanel
     private const float width = 364f, height = 326f;
     private UIGrid _uiGrid;
     private UIScrollbar _scrollbar;
+    public List<Player> drawnPlayers = new List<Player>();
     public PlayerSwapperGUI() : base(ModContent.Request<Texture2D>("PlayerSwapper/Assets/UI/Background"))
     {
         Width.Set(width, 0f);
@@ -65,6 +66,7 @@ public class PlayerSwapperGUI : DraggableUIPanel
     {
         PSPlayer.journeyCharactersIndex = new List<int>();
         PSPlayer.classicCharactersIndex = new List<int>();
+        drawnPlayers.Clear();
         _uiGrid.Clear();
 
         float top = 0f;
@@ -85,6 +87,8 @@ public class PlayerSwapperGUI : DraggableUIPanel
             listItem.Top.Set(top,0f);
             listItem.SetPadding(0f);
             _uiGrid.Add(listItem);
+            
+            drawnPlayers.Add(listItem.player);
 
             top += 100f;
         }

@@ -1,5 +1,5 @@
 displayName = Player Swap
 author = Kirtle
-version = 0.2
+version = 0.3
 homepage = https://github.com/xKirtle/PlayerSwapper
 side = Client

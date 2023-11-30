@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -23,66 +22,58 @@ public class PSPlayer : ModPlayer
         if (PlayerSwapper.toggleGUI.JustPressed)
             PSUIState.Instance.gui.ToggleGUI();
 
-        if (PlayerSwapper.nextPlayer.JustPressed)
+        if (PlayerSwapper.nextPlayer.JustPressed) 
         {
-            int curPlayerIndex = Main.PlayerList.IndexOf(Main.PlayerList.First(x => x.Player == Main.LocalPlayer));
-            int nextPlayerIndex;
-            if (!ModContent.GetInstance<PSModConfig>().CanSwapRegardlessOfDifficulty)
-            {
-                if (Main.GameMode == GameModeID.Creative) 
-                {
-                    if (journeyCharactersIndex[^1] <= curPlayerIndex)
-                        nextPlayerIndex = journeyCharactersIndex[0];
-                    else
-                        nextPlayerIndex = journeyCharactersIndex.First(x => x > curPlayerIndex);
-                }
-                else 
-                {
-                    if (classicCharactersIndex[^1] <= curPlayerIndex)
-                        nextPlayerIndex = classicCharactersIndex[0];
-                    else
-                        nextPlayerIndex = classicCharactersIndex.First(x => x > curPlayerIndex);
-                }
-            }
-            else
-                nextPlayerIndex = (curPlayerIndex + 1 + Main.PlayerList.Count) % Main.PlayerList.Count;
-
-            if (nextPlayerIndex >= Main.PlayerList.Count) return;
-            SwapPlayer(Main.PlayerList[nextPlayerIndex]);
+            int nextPlayerIndex = GetNextPlayerIndex();
+            if (IsValidPlayerIndex(nextPlayerIndex))
+                SwapPlayer(Main.PlayerList[nextPlayerIndex]);
         }
         
         if (PlayerSwapper.previousPlayer.JustPressed)
         {
-            int curPlayerIndex = Main.PlayerList.IndexOf(Main.PlayerList.First(x => x.Player == Main.LocalPlayer));
-            int previousPlayerIndex;
-            if (!ModContent.GetInstance<PSModConfig>().CanSwapRegardlessOfDifficulty)
-            {
-                if (Main.GameMode == GameModeID.Creative) 
-                {
-                    if (journeyCharactersIndex[0] >= curPlayerIndex)
-                        previousPlayerIndex = journeyCharactersIndex[^1];
-                    else
-                        previousPlayerIndex = journeyCharactersIndex.Last(x => x < curPlayerIndex);
-                }
-                else 
-                {
-                    if (classicCharactersIndex[0] >= curPlayerIndex)
-                        previousPlayerIndex = classicCharactersIndex[^1];
-                    else
-                        previousPlayerIndex = classicCharactersIndex.Last(x => x < curPlayerIndex);
-                }
-            }
-            else
-                previousPlayerIndex = (curPlayerIndex - 1 + Main.PlayerList.Count) % Main.PlayerList.Count;
-
-            if (previousPlayerIndex < 0) return;
-            SwapPlayer(Main.PlayerList[previousPlayerIndex]);
+            int previousPlayerIndex = GetPreviousPlayerIndex();
+            if (IsValidPlayerIndex(previousPlayerIndex))
+                SwapPlayer(Main.PlayerList[previousPlayerIndex]);
         }
+    }
+
+    private static bool IsValidPlayerIndex(int index) => index >= 0 && index < Main.PlayerList.Count;
+    
+    private static int GetCurrentPlayerIndex() => Main.PlayerList.IndexOf(Main.PlayerList.FirstOrDefault(x => x.Player == Main.LocalPlayer));
+
+    private static int GetNextPlayerIndex() {
+
+        int curPlayerIndex = GetCurrentPlayerIndex();
+        if (curPlayerIndex == -1) return -1;
+        
+        if (ModContent.GetInstance<PSModConfig>().CanSwapRegardlessOfDifficulty)
+            return (curPlayerIndex + 1 + Main.PlayerList.Count) % Main.PlayerList.Count;
+
+        var relevantCharactersIndex = Main.GameMode == GameModeID.Creative ? journeyCharactersIndex : classicCharactersIndex;
+        
+        return relevantCharactersIndex[^1] <= curPlayerIndex ?
+            relevantCharactersIndex[0] :
+            relevantCharactersIndex.First(x => x > curPlayerIndex);
+    }
+    
+    private static int GetPreviousPlayerIndex() {
+
+        int curPlayerIndex = GetCurrentPlayerIndex();
+        if (curPlayerIndex == -1) return -1;
+        
+        if (ModContent.GetInstance<PSModConfig>().CanSwapRegardlessOfDifficulty)
+            return (curPlayerIndex - 1 + Main.PlayerList.Count) % Main.PlayerList.Count;
+
+        var relevantCharactersIndex = Main.GameMode == GameModeID.Creative ? journeyCharactersIndex : classicCharactersIndex;
+        
+        return relevantCharactersIndex[0] >= curPlayerIndex ?
+            relevantCharactersIndex[^1] :
+            relevantCharactersIndex.Last(x => x > curPlayerIndex);
     }
     
     public static void SwapPlayer(PlayerFileData data)
     {
-        Vector2 oldPos = Main.LocalPlayer.position;
+        var oldPos = Main.LocalPlayer.position;
         int oldDir = Main.LocalPlayer.direction;
         int fallStart = Main.LocalPlayer.fallStart;
         int fallStart2 = Main.LocalPlayer.fallStart2;

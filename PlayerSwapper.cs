@@ -11,9 +11,9 @@ namespace PlayerSwapper
 		
 		public override void Load()
 		{
-			nextPlayer = KeybindLoader.RegisterKeybind(this, "Next Player", "I");
-			previousPlayer = KeybindLoader.RegisterKeybind(this, "Previous Player", "O");
-			toggleGUI = KeybindLoader.RegisterKeybind(this, "Toggle GUI", "F");
+			nextPlayer = KeybindLoader.RegisterKeybind(this, "NextPlayer", "I");
+			previousPlayer = KeybindLoader.RegisterKeybind(this, "PreviousPlayer", "O");
+			toggleGUI = KeybindLoader.RegisterKeybind(this, "ToggleMenu", "F");
 		}
 	}
 }

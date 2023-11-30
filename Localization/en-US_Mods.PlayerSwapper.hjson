@@ -1,12 +1,12 @@
 Keybinds: {
-	"Next Player.DisplayName": Next Player
-	"Previous Player.DisplayName": Previous Player
-	"Toggle GUI.DisplayName": Toggle  GUI
+	NextPlayer.DisplayName: Next Player
+	PreviousPlayer.DisplayName: Previous Player
+	ToggleMenu.DisplayName: Toggle Menu
 }
 
 Configs: {
-	PSModConfig: {
-		DisplayName: PlayerSwap Mod Config
+	PlayerSwapModConfig: {
+		DisplayName: Player Swap Mod Config
 
 		CanSwapRegardlessOfDifficulty: {
 			Label: Swap to character regardless of the world difficulty

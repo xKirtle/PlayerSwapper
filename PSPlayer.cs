@@ -46,7 +46,7 @@ public class PSPlayer : ModPlayer
         int curPlayerIndex = GetCurrentPlayerIndex();
         if (curPlayerIndex == -1) return -1;
         
-        if (ModContent.GetInstance<PSModConfig>().CanSwapRegardlessOfDifficulty)
+        if (ModContent.GetInstance<PlayerSwapModConfig>().CanSwapRegardlessOfDifficulty)
             return (curPlayerIndex + 1 + Main.PlayerList.Count) % Main.PlayerList.Count;
 
         var relevantCharactersIndex = Main.GameMode == GameModeID.Creative ? journeyCharactersIndex : classicCharactersIndex;
@@ -61,7 +61,7 @@ public class PSPlayer : ModPlayer
         int curPlayerIndex = GetCurrentPlayerIndex();
         if (curPlayerIndex == -1) return -1;
         
-        if (ModContent.GetInstance<PSModConfig>().CanSwapRegardlessOfDifficulty)
+        if (ModContent.GetInstance<PlayerSwapModConfig>().CanSwapRegardlessOfDifficulty)
             return (curPlayerIndex - 1 + Main.PlayerList.Count) % Main.PlayerList.Count;
 
         var relevantCharactersIndex = Main.GameMode == GameModeID.Creative ? journeyCharactersIndex : classicCharactersIndex;

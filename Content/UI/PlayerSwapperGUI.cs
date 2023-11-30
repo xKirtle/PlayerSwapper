@@ -74,7 +74,7 @@ public class PlayerSwapperGUI : DraggableUIPanel
         {
             PlayerFileData data = Main.PlayerList[i];
             if (data == Main.ActivePlayerFileData) continue;
-            if (!ModContent.GetInstance<PSModConfig>().CanSwapRegardlessOfDifficulty &&
+            if (!ModContent.GetInstance<PlayerSwapModConfig>().CanSwapRegardlessOfDifficulty &&
                 !PSPlayer.PlayerMatchesWorldDifficulty(data.Player)) continue;
 
             if (Main.GameMode == GameModeID.Creative)

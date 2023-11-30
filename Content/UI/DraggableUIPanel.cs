@@ -14,18 +14,18 @@ namespace PlayerSwapper.Content.UI
         private Vector2 offset;
         private bool dragging;
         public bool canDrag;
-
-        public override void MouseDown(UIMouseEvent evt)
+        
+        public override void LeftMouseDown(UIMouseEvent evt)
         {
-            base.MouseDown(evt);
+            base.LeftMouseDown(evt);
             dragging = true;
             if (canDrag)
                 offset = new Vector2(evt.MousePosition.X - Left.Pixels, evt.MousePosition.Y - Top.Pixels);
         }
 
-        public override void MouseUp(UIMouseEvent evt)
+        public override void LeftMouseUp(UIMouseEvent evt)
         {
-            base.MouseUp(evt);
+            base.LeftMouseUp(evt);
             Vector2 end = evt.MousePosition;
             dragging = false;
 

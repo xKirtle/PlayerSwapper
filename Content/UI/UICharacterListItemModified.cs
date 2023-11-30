@@ -57,14 +57,14 @@ public class UICharacterListItemModified : UIPanel
         _playerPanel = new UICharacter(player);
         _playerPanel.Left.Set(12f, 0f);
         _playerPanel.VAlign = 0.2f;
-        _playerPanel.OnDoubleClick += (__, _) => { PSPlayer.SwapPlayer(data); };
-        base.OnDoubleClick += (__, _) => { PSPlayer.SwapPlayer(data); };
+        _playerPanel.OnLeftDoubleClick += (__, _) => { PSPlayer.SwapPlayer(data); };
+        base.OnLeftDoubleClick += (__, _) => { PSPlayer.SwapPlayer(data); };
         Append(_playerPanel);
         
         UIImageButton buttonPlay = new UIImageButton(_buttonPlayTexture);
         buttonPlay.VAlign = .91f;
         buttonPlay.Left.Set(8f, 0f);
-        buttonPlay.OnClick += (__, _) => { PSPlayer.SwapPlayer(data); };
+        buttonPlay.OnLeftClick += (__, _) => { PSPlayer.SwapPlayer(data); };
         buttonPlay.OnMouseOver += PlayMouseOver;
         buttonPlay.OnMouseOut += ButtonMouseOut;
         buttonPlay.SetSnapPoint("Play", snapPointIndex);
@@ -73,7 +73,7 @@ public class UICharacterListItemModified : UIPanel
         UIImageButton buttonFavorite = new UIImageButton(data.IsFavorite ? _buttonFavoriteActiveTexture : _buttonFavoriteInactiveTexture);
         buttonFavorite.VAlign = .91f;
         buttonFavorite.Left.Set(32f, 0f);
-        buttonFavorite.OnClick += FavoriteButtonClick;
+        buttonFavorite.OnLeftClick += FavoriteButtonClick;
         buttonFavorite.OnMouseOver += FavoriteMouseOver;
         buttonFavorite.OnMouseOut += ButtonMouseOut;
         buttonFavorite.SetVisibility(1f, data.IsFavorite ? 0.8f : 0.4f);

@@ -1,3 +1,5 @@
+Now updated to tModLoader v2023.x (1.4.4.x)!
+
 Player Swap allows you to swap between player saves without the need of rejoining your world!
 
 Swapping can be done through the menu that can be brought up with a keybind or through two different keybinds to iterate over all available player saves.

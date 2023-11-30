@@ -1,0 +1,16 @@
+Keybinds: {
+	NextPlayer.DisplayName: Next Player
+	PreviousPlayer.DisplayName: Previous Player
+	ToggleMenu.DisplayName: Toggle Menu
+}
+
+Configs: {
+	PlayerSwapModConfig: {
+		DisplayName: Player Swap Mod Config
+
+		CanSwapRegardlessOfDifficulty: {
+			Label: Swap to character regardless of the world difficulty
+			Tooltip: If enabled, characters created for Journey Mode will be able to play on Non-Journey Mode worlds and vice versa
+		}
+	}
+}

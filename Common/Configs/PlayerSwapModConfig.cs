@@ -4,7 +4,7 @@ using Terraria.ModLoader.Config;
 
 namespace PlayerSwapper.Common.Configs;
 
-public class PSModConfig : ModConfig
+public class PlayerSwapModConfig : ModConfig
 {
     public override ConfigScope Mode => ConfigScope.ClientSide;
 

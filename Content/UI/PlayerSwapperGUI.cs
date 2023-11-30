@@ -28,21 +28,21 @@ public class PlayerSwapperGUI : DraggableUIPanel
         Top.Set(20f, 0f);
         SetPadding(0f);
 
-        OnMouseDown += (element, listener) =>
+        OnLeftMouseDown += (element, listener) =>
         {
             Vector2 MenuPosition = new Vector2(Left.Pixels, Top.Pixels);
             Vector2 clickPos = Vector2.Subtract(element.MousePosition, MenuPosition);
             canDrag = clickPos.X <= width - 24f && clickPos.Y <= 24f;
         };
 
-        OnMouseUp += (__, _) => canDrag = false;
+        OnLeftMouseUp += (__, _) => canDrag = false;
 
         UIImage closeCross = new UIImage(ModContent.Request<Texture2D>("PlayerSwapper/Assets/UI/CloseCross"));
         closeCross.Width.Set(19f, 0f);
         closeCross.Height.Set(19f, 0f);
         closeCross.VAlign = 0.01f;
         closeCross.HAlign = 0.99f;
-        closeCross.OnMouseDown += (__, _) => { ToggleGUI(); };
+        closeCross.OnLeftMouseDown += (__, _) => { ToggleGUI(); };
         Append(closeCross);
 
         _scrollbar = new UIScrollbar();

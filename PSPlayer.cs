@@ -116,7 +116,7 @@ public class PSPlayer : ModPlayer
         (Main.GameMode != GameModeID.Creative && player.difficulty != GameModeID.Creative) ||
         (Main.GameMode == GameModeID.Creative && player.difficulty == GameModeID.Creative);
 
-    public override void OnEnterWorld(Player player) => PSUIState.Instance.gui.RefreshGUI();
+    public override void OnEnterWorld() => PSUIState.Instance.gui.RefreshGUI();
 
     public override void Unload()
     {
